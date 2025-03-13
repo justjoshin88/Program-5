@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Program 5: JSON and the Web</title>
+  <!-- Include Handlebars from a CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background: #f7f7f7;
+    }
+    h1 {
+      text-align: center;
+    }
+    #controls {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin: 0 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+      width: 80%;
+      background: #fff;
+    }
+    th, td {
+      border: 1px solid #aaa;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    th {
+      background: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Student Data Viewer</h1>
+  <div id="controls">
+    <button id="btnCIT">CIT Majors</button>
+    <button id="btnBUS">Business Majors</button>
+  </div>
+  <div id="displayArea">
+    <!-- The Handlebars template will insert the HTML table here -->
+  </div>
+
+  <!-- Handlebars Template for displaying the student table -->
+  <script id="student-template" type="text/x-handlebars-template">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Major</th>
+          <th>Midterm</th>
+          <th>Final</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each students}}
+          <tr>
+            <td>{{name}}</td>
+            <td>{{major}}</td>
+            <td>{{midterm}}</td>
+            <td>{{final}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </script>
+
+  <script>
+    // Global variable to hold the student data after fetching
+    let studentDataArray = [];
+
+    /**
+     * Loads the JSON data file using the fetch API.
+     */
+    function loadStudentData() {
+      fetch('cit5students.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network error: ' + response.statusText);
+          }
+          return response.json();
+        })
+        .then(data => {
+          studentDataArray = data;
+          // Optionally, you can display one set by default here
+          // displayFilteredStudents("CIT");
+        })
+        .catch(error => {
+          console.error('Error loading JSON data:', error);
+          document.getElementById('displayArea').innerHTML = '<p>Error loading data.</p>';
+        });
+    }
+
+    /**
+     * Filters the student array based on the selected major
+     * and renders the results using Handlebars.
+     *
+     * @param {string} majorType - The major to filter by ("CIT" or "BUS").
+     */
+    function displayFilteredStudents(majorType) {
+      // Filter the data by major (case-sensitive)
+      const filtered = studentDataArray.filter(student => student.major === majorType);
+
+      // Grab the template, compile it, and pass in the filtered data
+      const templateSource = document.getElementById('student-template').innerHTML;
+      const template = Handlebars.compile(templateSource);
+      const compiledHtml = template({ students: filtered });
+
+      // Insert the generated HTML into the display area
+      document.getElementById('displayArea').innerHTML = compiledHtml;
+    }
+
+    // Set up button event listeners after the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      loadStudentData();
+
+      document.getElementById('btnCIT').addEventListener('click', () => {
+        displayFilteredStudents("CIT");
+      });
+
+      document.getElementById('btnBUS').addEventListener('click', () => {
+        displayFilteredStudents("BUS");
+      });
+    });
+  </script>
+</body>
+</html>
