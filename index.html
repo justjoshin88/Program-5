@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Program 5: JSON and the Web</title>
-  <!-- Include Handlebars from a CDN -->
+  <title>Program 5</title>
   <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.min.js"></script>
   <style>
     body {
@@ -41,16 +40,14 @@
   </style>
 </head>
 <body>
-  <h1>Student Data Viewer</h1>
+  <h1>Select A Major</h1>
   <div id="controls">
     <button id="btnCIT">CIT Majors</button>
     <button id="btnBUS">Business Majors</button>
   </div>
   <div id="displayArea">
-    <!-- The Handlebars template will insert the HTML table here -->
   </div>
 
-  <!-- Handlebars Template for displaying the student table -->
   <script id="student-template" type="text/x-handlebars-template">
     <table>
       <thead>
@@ -100,12 +97,6 @@
         });
     }
 
-    /**
-     * Filters the student array based on the selected major
-     * and renders the results using Handlebars.
-     *
-     * @param {string} majorType - The major to filter by ("CIT" or "BUS").
-     */
     function displayFilteredStudents(majorType) {
       // Filter the data by major (case-sensitive)
       const filtered = studentDataArray.filter(student => student.major === majorType);
@@ -115,11 +106,9 @@
       const template = Handlebars.compile(templateSource);
       const compiledHtml = template({ students: filtered });
 
-      // Insert the generated HTML into the display area
       document.getElementById('displayArea').innerHTML = compiledHtml;
     }
 
-    // Set up button event listeners after the DOM is fully loaded
     document.addEventListener('DOMContentLoaded', () => {
       loadStudentData();
 
