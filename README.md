@@ -1,0 +1,1 @@
+Clicking either button will sort and display the json file by major. Clicking the CIT Majors button will display only the CIT majors, as shown on the left, and clicking the Business Majors button should display only the BUS majors, as shown on the right. 
